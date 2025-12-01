@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Loan - Peer2Peer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Request a Loan</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        element.classList.add('form-control');
+    });
+
+    const loanTypeSelect = document.getElementById('id_loan_type');
+    const customDaysField = document.getElementById('id_custom_days').closest('.mb-3');
+    const durationMonthsField = document.getElementById('id_duration_months').closest('.mb-3');
+
+    function toggleFields() {
+        if (loanTypeSelect.value === 'Custom') {
+            customDaysField.style.display = 'block';
+            durationMonthsField.style.display = 'none';
+        } else {
+            customDaysField.style.display = 'none';
+            durationMonthsField.style.display = 'block';
+        }
+    }
+
+    if (loanTypeSelect) {
+        loanTypeSelect.addEventListener('change', toggleFields);
+        toggleFields(); // Run on load
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Loan Marketplace - Peer2Peer{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Loan Marketplace</h2>
+
+<div class="row">
+    {% for loan in loans %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Loan #{{ loan.id }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">by {{ loan.user.username }}</h6>
+                <p class="card-text">{{ loan.purpose }}</p>
+
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Amount
+                        <span class="fw-bold">₹ {{ loan.amount }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Duration
+                        <span>{{ loan.duration_months }} months</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Interest Rate
+                        <span>{{ loan.interest_rate|default:"Negotiable" }}%</span>
+                    </li>
+                </ul>
+
+                <div class="d-grid">
+                    <a href="{% url 'fund_loan' loan.id %}" class="btn btn-success">Fund This Loan</a>
+                </div>
+            </div>
+            <div class="card-footer text-muted small">
+                Requested on {{ loan.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="lead text-muted">No loans currently available for funding.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

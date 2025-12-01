@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Make Payment - Peer2Peer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Make a Payment</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <h5 class="alert-heading">Loan Details</h5>
+                    <p class="mb-1"><strong>Loan ID:</strong> #{{ loan.id }}</p>
+                    <p class="mb-1"><strong>Total Loan Amount:</strong> ₹{{ loan.amount }}</p>
+                    <p class="mb-0"><strong>Purpose:</strong> {{ loan.purpose }}</p>
+                </div>
+
+                <div class="card border-primary mb-4">
+                    <div class="card-header bg-primary text-white">
+                        Next Payment Due
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="display-4 text-primary mb-3">₹{{ payment.amount }}</h2>
+                        <p class="text-muted mb-0">Due Date: {{ payment.due_date|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle me-2"></i>Pay Now
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Borrower Dashboard - Peer2Peer{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-8">
+    <h2>My Loans</h2>
+  </div>
+  <div class="col-md-4 text-end">
+    <a href="{% url 'request_loan' %}" class="btn btn-primary">
+      <i class="fas fa-plus me-2"></i>Request New Loan
+    </a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    {% if loans %}
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Date Requested</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for loan in loans %}
+          <tr>
+            <td>{{ loan.id }}</td>
+            <td>₹{{ loan.amount }}</td>
+            <td>{{ loan.purpose }}</td>
+            <td>
+              <span
+                class="badge bg-{% if loan.status == 'funded' %}success{% elif loan.status == 'repaid' %}primary{% elif loan.status == 'rejected' %}danger{% else %}warning{% endif %}">
+                {{ loan.get_status_display }}
+              </span>
+            </td>
+            <td>{{ loan.created_at|date:"M d, Y" }}</td>
+            <td>
+              {% if loan.status == 'funded' %}
+              <a href="{% url 'make_payments' loan.id %}" class="btn btn-sm btn-outline-primary">
+                Make Payment
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
+      <p class="lead text-muted">You haven't requested any loans yet.</p>
+      <a href="{% url 'request_loan' %}" class="btn btn-primary">Request Your First Loan</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

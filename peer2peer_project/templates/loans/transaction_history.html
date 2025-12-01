@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Transaction History</h2>
+
+  {% if transactions %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Type</th>
+          <th scope="col">Description</th>
+          <th scope="col" class="text-end">Amount</th>
+          <th scope="col" class="text-end">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for transaction in transactions %}
+        <tr>
+          <td>{{ transaction.date|date:"M d, Y H:i" }}</td>
+          <td>
+            {% if transaction.type == 'deposit' %}
+              <span class="badge bg-primary">Deposit</span>
+            {% elif transaction.type == 'funded_loan' %}
+              <span class="badge bg-warning text-dark">Funded Loan</span>
+            {% elif transaction.type == 'loan_received' %}
+              <span class="badge bg-success">Loan Received</span>
+            {% elif transaction.type == 'payment_out' %}
+              <span class="badge bg-danger">Payment Out</span>
+            {% elif transaction.type == 'payment_in' %}
+              <span class="badge bg-info text-dark">Payment In</span>
+            {% else %}
+              <span class="badge bg-secondary">Unknown</span>
+            {% endif %}
+          </td>
+          <td>{{ transaction.description }}</td>
+          <td class="text-end">
+            {% if transaction.type == 'deposit' or transaction.type == 'payment_in' or transaction.type == 'loan_received' %}
+              <span class="text-success fw-bold">+ ₹{{ transaction.amount }}</span>
+            {% else %}
+              <span class="text-danger fw-bold">- ₹{{ transaction.amount }}</span>
+            {% endif %}
+          </td>
+          <td class="text-end">₹{{ transaction.balance }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center">No transactions found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="alert alert-info">No transactions to show.</div>
+  {% endif %}
+</div>
+{% endblock %}
